@@ -1,19 +1,20 @@
-Module.register("MMM-Stats",{
+Module.register("MMM-Stats", {
 
-    defaults:{
+    defaults: {
 		updateInterval: 60 * 60 * 1000, // ms (1 hour)
 		counters : [
-			{ label: "{0} day(s) since last incident", startDate: "1977-04-01" },
+			{ label: "{0} day(s) since last incident", startDate: "2001-01-01" },
 		]
 	  },
 	
-	  start () {
-		setInterval(() => {
-		  this.getContent();
+	  start: function() {
+		let self = this;
+		setInterval(function() {
+			self.updateDom(); // no speed defined, so it updates instantly.
 		}, this.config.updateInterval);
-	  },
+	},
 
-	  getDaysSince(startDate) {
+	  getDaysSince: function(startDate) {
 		const start = new Date(startDate); // Parse the start date
 		const now = new Date(); // Get the current date
 		const diffTime = Math.abs(now - start); // Calculate the difference in milliseconds
@@ -21,7 +22,7 @@ Module.register("MMM-Stats",{
 		return diffDays;
 	  },
 
-	  getDom () {
+	  getDom: function() {
 		const outerDiv = document.createElement("div");
 		
 		this.config.counters.forEach(element => {
@@ -32,16 +33,6 @@ Module.register("MMM-Stats",{
 		});
 
 		return outerDiv;
-	  },
-
-	  notificationReceived (notification) {
-		if (notification === "ALL_MODULES_STARTED") {
-		  this.getContent();
-		}
-	  },
-	
-	  async getContent () {
-		this.updateDOM();
 	  }
 	
 });
